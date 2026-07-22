@@ -72,6 +72,22 @@ missing_method = {
     "Log-price interpolation": "log_interpolation",
     "Leave missing": "leave_missing",
 }[missing_label]
+assets = []
+errors = []
+
+for uploaded in uploads:
+    try:
+        assets.append(
+            parse_market_file(
+                uploaded.name,
+                uploaded.getvalue(),
+                dayfirst=dayfirst,
+                outlier_threshold=10.0,
+                outlier_policy="flag",
+            )
+        )
+    except Exception as exc:
+        errors.append((uploaded.name, str(exc)))
 outlier_policy = {
     "Flag only (recommended)": "flag",
     "Treat as missing before imputation": "replace",
