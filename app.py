@@ -66,7 +66,41 @@ calendar_mode = {
     "Only dates shared by every asset": "intersection",
     "All Monday-Friday dates": "business_days",
 }[calendar_label]
+uploads = st.file_uploader(
+    "Historical files",
+    type=["csv", "xlsx", "xls"],
+    accept_multiple_files=True,
+    help="Upload one file per asset.",
+)
 
+if not uploads:
+    st.info("Upload at least one historical file to begin.")
+    st.stop()
+
+
+assets = []
+errors = []
+
+for uploaded in uploads:
+    try:
+        asset = parse_market_file(
+            uploaded.name,
+            uploaded.getvalue(),
+            dayfirst=dayfirst,
+            outlier_threshold=10.0,
+            outlier_policy="flag",
+        )
+        assets.append(asset)
+
+    except Exception as exc:
+        errors.append((uploaded.name, str(exc)))
+
+
+for file_name, message in errors:
+    st.error(f"{file_name}: {message}")
+
+if not assets:
+    st.stop()
 missing_method = {
     "Carry forward previous close (recommended)": "previous_close",
     "Log-price interpolation": "log_interpolation",
