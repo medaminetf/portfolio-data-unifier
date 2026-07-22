@@ -29,7 +29,12 @@ with st.expander("How missing dates are handled", expanded=False):
 
 with st.sidebar:
     st.header("Processing options")
-    dayfirst = st.checkbox("Dates are day-first (DD/MM/YYYY)", value=True)
+
+    dayfirst = st.checkbox(
+        "Dates are day-first (DD/MM/YYYY)",
+        value=True,
+    )
+
     calendar_label = st.selectbox(
         "Alignment calendar",
         [
@@ -39,6 +44,7 @@ with st.sidebar:
         ],
         index=0,
     )
+
     missing_label = st.selectbox(
         "Missing/non-trading values",
         [
@@ -48,21 +54,19 @@ with st.sidebar:
         ],
         index=0,
     )
-    outlier_label = st.selectbox(
-        "Statistical return outliers",
-        ["Flag only (recommended)", "Treat as missing before imputation"],
-        index=0,
+
+    normalize_weights = st.checkbox(
+        "Normalize weights to 100%",
+        value=True,
     )
-    outlier_threshold = st.slider(
-        "Robust z-score threshold", min_value=4.0, max_value=12.0, value=8.0, step=0.5
-    )
-    normalize_weights = st.checkbox("Normalize weights to 100%", value=True)
+
 
 calendar_mode = {
     "Union of observed dates (recommended)": "union",
     "Only dates shared by every asset": "intersection",
     "All Monday-Friday dates": "business_days",
 }[calendar_label]
+
 missing_method = {
     "Carry forward previous close (recommended)": "previous_close",
     "Log-price interpolation": "log_interpolation",
