@@ -214,7 +214,7 @@ def parse_market_file(
     payload: bytes,
     *,
     dayfirst: bool = True,
-    outlier_threshold: float = 8.0,
+    outlier_threshold: float = 10.0,
     outlier_policy: OutlierPolicy = "flag",
 ) -> ParsedAsset:
     raw = _read_tabular_bytes(file_name, payload)
